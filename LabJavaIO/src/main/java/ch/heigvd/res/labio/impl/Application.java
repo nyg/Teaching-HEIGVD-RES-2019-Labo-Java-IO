@@ -151,15 +151,14 @@ public class Application implements IApplication {
    * encountered file and directory.
    */
   void printFileNames(final Writer writer) {
+
     IFileExplorer explorer = new DFSFileExplorer();
-    explorer.explore(new File(WORKSPACE_DIRECTORY), new IFileVisitor() {
-      @Override
-      public void visit(File file) {
-        /*
-         * There is a missing piece here. Notice how we use an anonymous class here. We provide the implementation
-         * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
-         * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
-         */
+    explorer.explore(new File(WORKSPACE_DIRECTORY), file -> {
+      try {
+        writer.write(file.getPath() + "\n");
+      }
+      catch (IOException e) {
+        throw new RuntimeException(e);
       }
     });
   }
