@@ -7,10 +7,11 @@ import ch.heigvd.res.labio.interfaces.IFileExplorer;
 import ch.heigvd.res.labio.interfaces.IFileVisitor;
 import ch.heigvd.res.labio.quotes.QuoteClient;
 import ch.heigvd.res.labio.quotes.Quote;
-import java.io.File;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
+
+import java.io.*;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
@@ -125,7 +126,24 @@ public class Application implements IApplication {
    * @throws IOException 
    */
   void storeQuote(Quote quote, String filename) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+
+    // création du chemin
+    List<String> pathComponents = new ArrayList<>();
+    pathComponents.add(WORKSPACE_DIRECTORY);
+    pathComponents.addAll(quote.getTags());
+    pathComponents.add(filename);
+
+    String filePath = String.join(File.separator, pathComponents);
+
+    // création des répertoires
+    File file = new File(filePath);
+    file.getParentFile().mkdirs();
+
+    // écriture de la citation dans le fichier
+    FileOutputStream fos = new FileOutputStream(file);
+    OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF-8");
+    BufferedWriter writer = new BufferedWriter(osw);
+    writer.write(quote.getQuote());
   }
   
   /**
